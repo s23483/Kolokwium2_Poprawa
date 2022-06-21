@@ -21,24 +21,23 @@ namespace WebApplication1.Controllers
             try
             {
                 var result = await _teamdbService.GetTeam(TeamID);
-                if (!_teamdbService.IfTeam(TeamID))
+                if (!_teamdbService.IfTeam(TeamID).Result)
                     return NotFound("team not found");
                 return Ok(result);
             }
             catch (SqlException)
             {
-                return ;
+                return Problem();
             }
         }
-        public async Task<ActionResult> AddMember(Member MemberID)
+        public async Task<ActionResult> AddMember(int MemberID, int TeamID)
         {
-            var result = await _teamdbService.AddMember(MemberID);
+            var result = await _teamdbService.AddMember(MemberID,TeamID);
             switch (result)
             {
                 case 0: return Ok();
-                case 1: return NotFound("Member not found");
                 case 2: return BadRequest("Member is not part of organisation");
-                default: return Unauthorized();
+                default: return Problem();
             }
         }
     }
