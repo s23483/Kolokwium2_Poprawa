@@ -21,11 +21,13 @@ namespace WebApplication1.Controllers
             try
             {
                 var result = await _teamdbService.GetTeam(TeamID);
+                if (!_teamdbService.IfTeam(TeamID))
+                    return NotFound("team not found");
                 return Ok(result);
             }
             catch (SqlException)
             {
-                return NotFound("team not found");
+                return ;
             }
         }
         public async Task<ActionResult> AddMember(Member MemberID)
